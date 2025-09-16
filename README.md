@@ -97,6 +97,7 @@ Cette méthodologie garantit un **fil directeur clair**, du déploiement à l’
 
 ## 3.Mise en place du Lab All-in-One
 
+Le Lab All-In-One est disponible sur le repo suivant : https://github.com/RORODABADO/CISSP-Labs-Docker-Compose
 
 ### 3.1 Description générale
 
