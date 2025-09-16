@@ -547,3 +547,67 @@ Voici l'état du **Dashboard Wazuh** après nos différentes simulations :
 >  On remarque que les évenement ont bien été enregistrés.
 
 ![image](assets/image-20250916131614-819zcmv.png)
+
+Voici l'état du **Dashboard Netdata** après nos différentes simulations :
+
+>  On remarque bien que les pics d’activité (CPU / réseau) sont corrélés et visibles sur les mêmes fenêtres temporelles que les opérations CALDERA :
+
+![image](assets/image-20250916131225-ju5vdgw.png)
+
+---
+
+## 6. Recommandations & durcissement
+
+### 6.1 Priorités immédiates (POC propre et sûr)
+
+- **Accès aux dashboards (Wazuh / Netdata / Caldera)**
+
+  - Restreindre aux IP du lab (pare-feu) et changer tous les mots de passe par défaut.
+  - Passer via un reverse-proxy avec authentification simple.
+- **Wazuh**
+
+  - Mettre un **mot de passe d’enrôlement** pour `authd`.
+  - **Persister** les données (volumes) et surveiller l’espace disque.
+  - **Windows** : garder **Sysmon** + collecte `eventchannel`.
+  - **Linux** : activer FIM sur `crontab`, `/etc/cron.d`, `/etc/sudoers`, `sshd_config` (temps réel).
+- **Netdata**
+
+  - Ne pas exposer `:19999` hors lab ; garder l’accès limité.
+  - Créer 2–3 **alertes** simples (CPU, RAM, réseau).
+- **CALDERA**
+
+  - Changer le mot de passe `red` et limiter l’accès à l’UI.
+  - Nettoyer les **payloads** après démo (cleanup).
+- **Secrets &amp; config**
+
+  - Centraliser les variables sensibles dans `.env` (non versionné).
+
+### 6.2 “À faire ensuite” (si passage vers prod / démonstrations récurrentes)
+
+- Activer **TLS** (agents ↔ Wazuh ↔ Indexer ↔ Dashboard) et **RBAC**.
+- Intégrer l’alerting **Teams/Slack** pour les événements **High/Critical**.
+- Automatiser le déploiement (Ansible/Terraform) et versionner les **profils CALDERA**.
+- Segmenter le réseau (mgmt / cibles) avec règles **deny-by-default**.
+
+### 6.3 Mini-runbooks (résolution express)
+
+- **Changement de port RDP (T1021.001)**  : confirmer la clé Registre, remettre le port/pare-feu, vérifier comptes admins, chercher d’autres traces (Sysmon 1/3).
+- **Persistance cron (T1053.003)**  : regarder le **diff** FIM, retirer la ligne, vérifier `authorized_keys`, forcer un scan Wazuh.
+- **BITS / sniffing (T1197 / T1040)**  : supprimer la tâche/outil, isoler la VM, rechercher transferts anormaux, révoquer les creds exposées.
+
+---
+
+
+## 7. Conclusion générale sur les outils utilisés
+
+Dans ce POC, la combinaison **CALDERA + Wazuh + Netdata** a atteint l’objectif pédagogique et opérationnel :
+
+- **CALDERA** a fourni un **cadre d’émulation** réaliste, piloté par des **TTP MITRE**. La modélisation en **profils adversaires** et l’**orchestration d’opérations** ont permis une démonstration reproductible, contrôlée et documentée du cycle d’attaque.
+- **Wazuh** a joué le rôle d’**EDR/XDR** : **collecte** (agents Windows/Linux, Sysmon), **corrélation** (règles OOB), **détection** (règles personnalisées) et **priorisation** (niveaux High/Critical). Le dashboard a facilité l’**enquête** (contexte, MITRE, chronologie).
+- **Netdata** a apporté l’**observabilité temps réel** (CPU, mémoire, I/O, réseau), utile pour **corroborer** l’activité des opérations offensives avec des **signatures de charge** (pics, saturation, etc.).
+
+Sur le plan **ingénierie**, l’approche **Docker Compose** a permis un **déploiement rapide, isolé et réutilisable**, compatible avec l’automatisation future (Ansible/Terraform).
+
+Sur le plan **sécurité**, les **recommandations** ci-dessus tracent un chemin clair du **lab** vers un **cadre de production** : durcissement OS, segmentation réseau, secrets, chiffrement, RBAC, règles de détection enrichies et intégrations d’alerting.
+
+**Conclusion** : la preuve de concept est **concluante**. Elle démontre que l’on peut **détecter, prioriser et investiguer** des comportements hostiles courants (Persistence, Discovery, Defense Evasion, Lateral Movement) tout en offrant une **plateforme portable** pour répéter la démonstration chez d’autres clients. Les **prochaines étapes** logiques sont l’**industrialisation** (IaC, CI/CD) et l’**extension de la couverture MITRE** (scénarios supplémentaires) avec un renforcement gradué des **contrôles de sécurité**.
