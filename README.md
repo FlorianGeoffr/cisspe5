@@ -1,3 +1,27 @@
+## Informations générales
+
+- **Nom et prénom :**  Florian GEOFFRENET
+- **Membres du groupe :**  Antoine ROTINAT
+- **Date de rendu :**  16/09/2025
+- **Matière :**  CISSP – IS Security Best Practices
+- **Enseignant :**  Soufien ABDESSADEQ
+
+---
+
+
+## 1. Introduction
+
+Dans le cadre du projet E5 à l’ESTIAM Bourges, nous avons été missionnés pour mettre en place un **lab de cybersécurité “all-in-one”**  permettant de démontrer l’intérêt d’un EDR/XDR (Endpoint/Extended Detection & Response).
+L’objectif est de fournir une **preuve de concept (POC)**  afin de montrer comment une solution de détection avancée peut identifier, corréler et alerter sur des activités malveillantes dans un environnement isolé.
+
+Le scénario proposé s’inscrit dans un contexte réaliste :
+un **client grand compte** dispose d’anciens serveurs supposés vulnérables mais son équipe interne n’a ni le temps ni les compétences nécessaires pour réaliser un audit approfondi. Notre rôle, en tant qu’ingénieurs cybersécurité intégrés à une équipe **Purple Team**, est de concevoir une démonstration permettant :
+
+- de **simuler des cyberattaques** représentatives,
+- d’**observer la collecte et la corrélation** des données de sécurité,
+- de **mettre en lumière les failles** présentes sur les serveurs testés,
+- et de proposer des **mesures de durcissement** alignées avec les bonnes pratiques de sécurité (CISSP IS Best Practices).
+
 Afin d’assurer la pertinence et la reproductibilité du projet, nous avons choisi une approche conteneurisée via **Docker Compose**, offrant un déploiement rapide et cohérent sur n’importe quel environnement compatible.
 Le lab intègre plusieurs composants essentiels :
 
